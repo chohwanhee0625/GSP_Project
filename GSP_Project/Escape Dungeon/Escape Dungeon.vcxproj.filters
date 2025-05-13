@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Class">
+      <UniqueIdentifier>{428099b2-3202-4edc-a435-48a35f9842f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Struct">
+      <UniqueIdentifier>{9512aa7e-fb08-44e1-adfe-bb900050198f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Object">
+      <UniqueIdentifier>{1dc48000-6290-49a8-8d36-d9fd11952146}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Object\Player">
+      <UniqueIdentifier>{1a99566f-a6e9-4f8e-b3c2-3b4ce234e9a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Object\Monster">
+      <UniqueIdentifier>{a2c960fd-6eed-4668-b8be-d87118ab0f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Object\Boss">
+      <UniqueIdentifier>{0bd40662-4ea0-46e3-a197-08e2dd383e50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Object\Thorn">
+      <UniqueIdentifier>{7dd3ee2e-fdbb-42d8-a5b4-3c7dc72e514c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Component">
+      <UniqueIdentifier>{14c01a3d-a352-4e9c-a3c4-76af858cd322}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Component\Collider">
+      <UniqueIdentifier>{704b4ce6-35f5-49e7-be5a-51b3412cca64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Component\RigidBody">
+      <UniqueIdentifier>{f4acf9d8-2fd7-4ede-a580-9dc0e3da066f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Moduel">
+      <UniqueIdentifier>{3db3b531-619b-41ce-90a6-50d0db88e459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Moduel\KeyMng">
+      <UniqueIdentifier>{39c2a97c-ae3b-4cc6-aa7f-04f328798c91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Moduel\selectGDI">
+      <UniqueIdentifier>{ad0fd2f4-bcc9-443d-8d7d-2c7a0190ab61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Component\Gravity">
+      <UniqueIdentifier>{9750b823-eba7-4e63-b90c-d39bb9c9217f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Object\Ground">
+      <UniqueIdentifier>{299fce99-5782-4e9e-9e91-5a4c84cf5254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{e9ad8a46-bab4-4dcc-b873-10bdb46048ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Object\BAttack">
+      <UniqueIdentifier>{bf121431-b5a3-44f9-a713-3fcbd965eacc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Object\Coin">
+      <UniqueIdentifier>{7bbebec8-1a21-4a93-bf97-3d28b3c4eb4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Object\Portal">
+      <UniqueIdentifier>{9e5f34d1-6e82-439e-a557-c19a152b2b0f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="struct.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Class\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Class\Object\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="Fire.h">
+      <Filter>Class\Object\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Thorn.h">
+      <Filter>Class\Object\Thorn</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Class\Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Class\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
+      <Filter>Class\Component\RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectGDI.h">
+      <Filter>Class\Moduel\selectGDI</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyMng.h">
+      <Filter>Class\Moduel\KeyMng</Filter>
+    </ClInclude>
+    <ClInclude Include="Gravity.h">
+      <Filter>Class\Component\Gravity</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>Class\Object\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+    <ClInclude Include="BAttack.h">
+      <Filter>Class\Object\BAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="Coin.h">
+      <Filter>Class\Object\Coin</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="mainfuntion.h">
+      <Filter>Struct</Filter>
+    </ClInclude>
+    <ClInclude Include="Portal.h">
+      <Filter>Class\Object\Portal</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Object.cpp">
+      <Filter>Class\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Class\Object\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="Fire.cpp">
+      <Filter>Class\Object\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Thorn.cpp">
+      <Filter>Class\Object\Thorn</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Class\Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Class\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Class\Component\RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectGDI.cpp">
+      <Filter>Class\Moduel\selectGDI</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyMng.cpp">
+      <Filter>Class\Moduel\KeyMng</Filter>
+    </ClCompile>
+    <ClCompile Include="Gravity.cpp">
+      <Filter>Class\Component\Gravity</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>Class\Object\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="BAttack.cpp">
+      <Filter>Class\Object\BAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="Coin.cpp">
+      <Filter>Class\Object\Coin</Filter>
+    </ClCompile>
+    <ClCompile Include="Portal.cpp">
+      <Filter>Class\Object\Portal</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Escape Dungeon.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
