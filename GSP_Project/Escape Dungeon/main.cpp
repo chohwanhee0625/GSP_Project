@@ -12,6 +12,7 @@
 #include "Portal.h"
 #include "Fire.h"
 #include "mainfuntion.h"
+#include "NetworkModule.h"
 
 
 // 기본적으로 타이머 돌면서 자동으로 되야하는거
@@ -626,6 +627,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_DESTROY:
 
+		std::cout << "alj" << std:: endl;
 		
 		for (int i{}; i < (int)PEN_TYPE::END; ++i)
 		{
@@ -689,3 +691,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 //
 //}
+
+int main()
+{
+	std::string ipAddr;
+	std::cout << "Enter Server IP Address: ";
+	//std::cin >> ipAddr;
+	//InitializeNetwork(ipAddr);
+
+	WinMain(0, 0, 0, SW_SHOWDEFAULT);
+
+	return 0;
+}

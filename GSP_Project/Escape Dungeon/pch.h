@@ -12,8 +12,6 @@ using std::uniform_int_distribution;
 using std::random_device;
 using std::default_random_engine;
 
-
-
 #include <assert.h>
 #include <algorithm>
 #include <math.h>
@@ -22,6 +20,7 @@ using std::default_random_engine;
 #include "struct.h"
 #include "define.h"
 #include "atlImage.h"
+#include "NetworkModule.h"
 
 #pragma comment(lib, "fmod_vc.lib")
 

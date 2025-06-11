@@ -58,6 +58,9 @@
     <Filter Include="Class\Object\Portal">
       <UniqueIdentifier>{9e5f34d1-6e82-439e-a557-c19a152b2b0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{32cd3537-ed27-4f7c-b423-0d5bc92132d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -115,6 +118,9 @@
     <ClInclude Include="Portal.h">
       <Filter>Class\Object\Portal</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkModule.h">
+      <Filter>Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -159,6 +165,9 @@
     </ClCompile>
     <ClCompile Include="Portal.cpp">
       <Filter>Class\Object\Portal</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkModule.cpp">
+      <Filter>Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
