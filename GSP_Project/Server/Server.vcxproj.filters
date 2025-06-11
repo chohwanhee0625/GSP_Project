@@ -4,8 +4,23 @@
     <ClInclude Include="pch.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="protocol.h">
+    <ClInclude Include="game_header.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GameServer.h">
+      <Filter>ServerMain</Filter>
+    </ClInclude>
+    <ClInclude Include="IocpCore.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Over.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -18,10 +33,36 @@
     <Filter Include="Content">
       <UniqueIdentifier>{4a2e81d2-a036-483f-a931-f75f81d2a6da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{f3ca75fc-3d35-4af3-819f-fc0e2ac30849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{5a40313c-196c-4267-aef3-b4da2836d593}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ServerMain</Filter>
     </ClCompile>
+    <ClCompile Include="GameServer.cpp">
+      <Filter>ServerMain</Filter>
+    </ClCompile>
+    <ClCompile Include="IocpCore.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Over.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Session.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="lua54.lib">
+      <Filter>Utils</Filter>
+    </Library>
   </ItemGroup>
 </Project>

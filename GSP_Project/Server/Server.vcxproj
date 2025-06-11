@@ -19,11 +19,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Over.cpp" />
+    <ClCompile Include="GameServer.cpp" />
+    <ClCompile Include="IocpCore.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Session.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Over.h" />
+    <ClInclude Include="GameServer.h" />
+    <ClInclude Include="game_header.h" />
+    <ClInclude Include="IocpCore.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="protocol.h" />
+    <ClInclude Include="Session.h" />
+    <ClInclude Include="Types.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="lua54.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

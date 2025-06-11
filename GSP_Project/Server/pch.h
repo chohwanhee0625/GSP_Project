@@ -1,12 +1,17 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <memory>
+#include <stdio.h>  
+#include <chrono>
+
 #include <vector>
 #include <array>
 #include <set>
 #include <unordered_set>
 #include <unordered_map>
 #include <concurrent_unordered_map.h>
+#include <concurrent_queue.h>
 
 #include <thread>
 #include <mutex>
@@ -15,8 +20,25 @@
 #include <WS2tcpip.h>
 #include <MSWSock.h>
 
-#include "protocol.h"
+#include "include/lua.hpp"
+
+#include "game_header.h"
+#include "Types.h"
 
 #pragma comment (lib, "WS2_32.lib")
 #pragma comment (lib, "MSWSock.lib")
+#pragma comment	(lib, "lua54.lib")
 
+constexpr int VIEW_RANGE = 7;
+constexpr int SECTOR_SIZE = 10;
+constexpr int SECTOR_COUNT_X = (MAP_WIDTH + SECTOR_SIZE + 1) / SECTOR_SIZE;
+constexpr int SECTOR_COUNT_Y = (MAP_HEIGHT + SECTOR_SIZE + 1) / SECTOR_SIZE;
+
+namespace std {
+	template<> struct hash<std::pair<int, int>> {
+		size_t operator()(const std::pair<int, int>& p) const noexcept {
+			return (static_cast<size_t>(p.first) << 32)
+				^ static_cast<unsigned>(p.second);
+		}
+	};
+}
