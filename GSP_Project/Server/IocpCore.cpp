@@ -32,9 +32,11 @@ bool IocpCore::Dispatch(uint32 timeoutMs)
     if (::GetQueuedCompletionStatus(_iocpHandle, OUT & numOfBytes, OUT & key,
         OUT reinterpret_cast<LPOVERLAPPED*>(&ex_over), timeoutMs))
     {
+        SessionRef session = ex_over->owner;
+        if (nullptr == session) return false;
 
         if ((0 == numOfBytes) && ((ex_over->eventType == EventType::IO_RECV) || (ex_over->eventType == EventType::IO_SEND))) {
-            disconnect(static_cast<int>(key));
+            session->Disconnect(static_cast<int>(key));
             if (ex_over->eventType == EventType::IO_SEND) delete ex_over;
             return true;
         }
@@ -42,7 +44,6 @@ bool IocpCore::Dispatch(uint32 timeoutMs)
 
         if (ex_over->eventType == EventType::IO_RECV || ex_over->eventType == EventType::IO_SEND)
         {
-            SessionRef session = ex_over->owner;
             session->Dispatch(ex_over, numOfBytes);
         }
         else

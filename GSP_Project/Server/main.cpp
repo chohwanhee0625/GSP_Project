@@ -4,12 +4,13 @@
 
 int main()
 {
+	setlocale(LC_ALL, "korean");
+	std::wcout.imbue(std::locale("korean"));
+
 	GameServer server;
 
 	server.Initialize();
 	server.Run();
-
-	// TODO: 메인 쓰레드는 DB 작업 실행
 
 	server.Shutdown();
 	return 0;

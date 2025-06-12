@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameServer.h"
 #include "IocpCore.h"
+#include "Session.h"
 
 
 void GameServer::Initialize()
@@ -16,7 +17,11 @@ void GameServer::Initialize()
         std::cerr << "Failed to create IOCP handle." << std::endl;
     }
 
-    // TODO: 
+
+    // TODO: DB 초기화, NPC 초기화, 맵데이터 초기화
+
+
+    StartAccept();
 
     std::cout << "[GameServer] Network and IOCP initialization complete." << std::endl;
 }
@@ -29,6 +34,8 @@ void GameServer::Run()
     _workerThreads.resize(workerCount);
     std::cout << "[GameServer] Running..." << std::endl;
 
+    
+    // IOCP worker Thread
     for (unsigned int i = 0; i < workerCount; ++i)
     {
         _workerThreads.emplace_back([this]() {
@@ -38,6 +45,11 @@ void GameServer::Run()
             }
             });
     }
+
+    // Timer Thread
+
+
+    // DB Thread
 
 
 }
@@ -56,4 +68,26 @@ void GameServer::Shutdown()
 
     _workerThreads.clear();
     std::cout << "[GameServer] Shutdown complete." << std::endl;
+}
+
+void GameServer::StartAccept()
+{
+    _listener = std::make_shared<Session>();
+    if (nullptr == _listener) { std::cerr << "Listener Fail\n"; exit(-1); }
+
+    std::shared_ptr<GameServer> server = std::static_pointer_cast<GameServer>(shared_from_this());
+    if (nullptr == server) exit(-1);
+    _listener->SetService(server);
+
+    _iocpCore->Register(_listener->GetHandle());
+
+    SOCKADDR_IN server_addr;
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(GAME_PORT);
+    server_addr.sin_addr.S_un.S_addr = INADDR_ANY;
+    bind(_listener->GetHandle(), reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr));
+    listen(_listener->GetHandle(), SOMAXCONN);
+    SOCKADDR_IN cl_addr;
+    int addr_size = sizeof(cl_addr);
 }
