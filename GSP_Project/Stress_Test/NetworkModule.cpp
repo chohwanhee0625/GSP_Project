@@ -27,7 +27,7 @@ const static int MAX_PACKET_SIZE = 255;
 const static int MAX_BUFF_SIZE = 255;
 
 #pragma comment (lib, "ws2_32.lib")
-
+ 
 #include "../Server/game_header.h"
 std::string serverIp;
 

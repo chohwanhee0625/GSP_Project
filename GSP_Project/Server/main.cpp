@@ -7,12 +7,12 @@ int main()
 	setlocale(LC_ALL, "korean");
 	std::wcout.imbue(std::locale("korean"));
 
-	GameServer server;
+	std::shared_ptr<GameServer> server = std::make_shared<GameServer>();
 
-	server.Initialize();
-	server.Run();
+	server->Initialize();
+	server->Run();
 
-	server.Shutdown();
+	server->Shutdown();
 	return 0;
 }
 

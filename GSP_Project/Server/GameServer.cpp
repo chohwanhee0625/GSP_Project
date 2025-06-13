@@ -2,7 +2,9 @@
 #include "GameServer.h"
 #include "IocpCore.h"
 #include "Session.h"
+#include "PacketHandler.h"
 
+thread_local std::unordered_set<int/*client id*/> view_event_list;
 
 void GameServer::Initialize()
 {
@@ -11,17 +13,18 @@ void GameServer::Initialize()
         std::cerr << "WSAStartup failed." << std::endl;
     }
 
-    _iocpCore = std::make_shared<IocpCore>();
+    _iocpCore = std::make_shared<IocpCore>(shared_from_this());
     if (!_iocpCore || _iocpCore->GetHandle() == nullptr)
     {
         std::cerr << "Failed to create IOCP handle." << std::endl;
     }
 
+    PacketHandler::Init();
+
 
     // TODO: DB 초기화, NPC 초기화, 맵데이터 초기화
-
-
-    StartAccept();
+     
+    _iocpCore->StartAccept();
 
     std::cout << "[GameServer] Network and IOCP initialization complete." << std::endl;
 }
@@ -41,7 +44,17 @@ void GameServer::Run()
         _workerThreads.emplace_back([this]() {
             while (true == _running.load())
             {
-                _iocpCore->Dispatch(10);
+                _iocpCore->Dispatch();
+
+                for (auto& client_id : view_event_list) {
+                    SessionRef session = clients[client_id];
+                    if (nullptr == session) continue;
+                    {
+                        std::lock_guard<std::mutex> sl(session->_s_lock);
+                        if (ST_INGAME != session->_state) continue;
+                    }
+                    session->dispatchViewEvents();
+                }
             }
             });
     }
@@ -50,7 +63,9 @@ void GameServer::Run()
 
 
     // DB Thread
+    while (true == _running.load()) {
 
+    }
 
 }
 
@@ -61,33 +76,22 @@ void GameServer::Shutdown()
 
     // 작업 스레드 종료 대기
     for (auto& thread : _workerThreads) {
-        if (thread.joinable()) {
             thread.join();
-        }
     }
 
     _workerThreads.clear();
     std::cout << "[GameServer] Shutdown complete." << std::endl;
 }
 
-void GameServer::StartAccept()
-{
-    _listener = std::make_shared<Session>();
-    if (nullptr == _listener) { std::cerr << "Listener Fail\n"; exit(-1); }
+//void GameServer::AddSession(SessionRef session)
+//{
+//    uint32 client_id = GClientIDGen++;
+//    clients[client_id] = session;
+//    session->AllocPlayerData(client_id);
+//}
 
-    std::shared_ptr<GameServer> server = std::static_pointer_cast<GameServer>(shared_from_this());
-    if (nullptr == server) exit(-1);
-    _listener->SetService(server);
-
-    _iocpCore->Register(_listener->GetHandle());
-
-    SOCKADDR_IN server_addr;
-    memset(&server_addr, 0, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(GAME_PORT);
-    server_addr.sin_addr.S_un.S_addr = INADDR_ANY;
-    bind(_listener->GetHandle(), reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr));
-    listen(_listener->GetHandle(), SOMAXCONN);
-    SOCKADDR_IN cl_addr;
-    int addr_size = sizeof(cl_addr);
-}
+//void GameServer::ReleaseSession(SessionRef session)
+//{
+//
+//}
+//

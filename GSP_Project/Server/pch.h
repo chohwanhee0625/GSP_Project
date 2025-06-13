@@ -4,6 +4,8 @@
 #include <memory>
 #include <stdio.h>  
 #include <chrono>
+#include <functional>
+#include <random>
 
 #include <vector>
 #include <array>
@@ -11,10 +13,12 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <concurrent_unordered_map.h>
+#include <concurrent_unordered_set.h>
 #include <concurrent_queue.h>
 
 #include <thread>
 #include <mutex>
+#include <shared_mutex>
 #include <atomic>
 
 #include <WS2tcpip.h>
@@ -30,7 +34,7 @@
 #pragma comment	(lib, "lua54.lib")
 
 constexpr int VIEW_RANGE = 7;
-constexpr int SECTOR_SIZE = 10;
+constexpr int SECTOR_SIZE = 15;
 constexpr int SECTOR_COUNT_X = (MAP_WIDTH + SECTOR_SIZE + 1) / SECTOR_SIZE;
 constexpr int SECTOR_COUNT_Y = (MAP_HEIGHT + SECTOR_SIZE + 1) / SECTOR_SIZE;
 
@@ -42,3 +46,5 @@ namespace std {
 		}
 	};
 }
+
+extern std::atomic_int GClientIDGen;

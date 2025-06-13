@@ -1,6 +1,7 @@
 #pragma once
 
 constexpr short GAME_PORT = 3000;
+constexpr int	BUF_SIZE = 200;
 
 constexpr short MAX_CHAT_LENGTH = 255;
 
@@ -11,11 +12,14 @@ constexpr char S2C_P_AVATAR_INFO = 1;
 constexpr char S2C_P_MOVE = 2;
 constexpr char S2C_P_ENTER = 3;
 constexpr char S2C_P_LEAVE = 4;
+
 constexpr char C2S_P_LOGIN = 5;
 constexpr char C2S_P_MOVE = 6;
+
 constexpr char S2C_P_CHAT = 7;
 constexpr char S2C_P_STAT_CHANGE = 8;
 constexpr char S2C_P_LOGIN_FAIL = 9;
+
 constexpr char C2S_P_ATTACK = 10;
 constexpr char C2S_P_CHAT = 11;
 constexpr char C2S_P_TELEPORT = 12;		// 동접 테스트 할 때
@@ -38,6 +42,7 @@ struct sc_packet_avatar_info {
 	unsigned char size;
 	char type;
 	long long  id;
+	char  name[MAX_ID_LENGTH];
 	short x, y;
 	short max_hp;
 	short hp;
@@ -101,6 +106,7 @@ struct cs_packet_login {
 	unsigned char  size;
 	char  type;
 	char  name[MAX_ID_LENGTH];
+	char  id[MAX_ID_LENGTH];
 	bool  isdummy = false;
 };
 

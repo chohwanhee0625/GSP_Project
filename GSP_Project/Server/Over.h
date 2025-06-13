@@ -23,6 +23,8 @@ public:
 	char _buf[MAX_CHAT_LENGTH] = {};
 
 	EventType	eventType;
-	SessionRef	owner;
+	//SessionRef	owner;
+	//SessionRef	session;	// Accept 성공시 세션 연결용
+	int32 _id;
 };
 
