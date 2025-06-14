@@ -26,7 +26,19 @@
       <Filter>ServerMain</Filter>
     </ClInclude>
     <ClInclude Include="DBManager.h">
-      <Filter>DB</Filter>
+      <Filter>DB_Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>DB_Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="NPC.h">
+      <Filter>Content</Filter>
+    </ClInclude>
+    <ClInclude Include="LUA.h">
+      <Filter>Content</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -42,7 +54,7 @@
     <Filter Include="Network">
       <UniqueIdentifier>{f3ca75fc-3d35-4af3-819f-fc0e2ac30849}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DB">
+    <Filter Include="DB_Timer">
       <UniqueIdentifier>{5a40313c-196c-4267-aef3-b4da2836d593}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -69,12 +81,29 @@
       <Filter>ServerMain</Filter>
     </ClCompile>
     <ClCompile Include="DBManager.cpp">
-      <Filter>DB</Filter>
+      <Filter>DB_Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>DB_Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="NPC.cpp">
+      <Filter>Content</Filter>
+    </ClCompile>
+    <ClCompile Include="LUA.cpp">
+      <Filter>Content</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="lua54.lib">
       <Filter>Utils</Filter>
     </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="npc.lua">
+      <Filter>Content</Filter>
+    </None>
   </ItemGroup>
 </Project>

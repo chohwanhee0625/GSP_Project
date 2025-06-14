@@ -9,6 +9,8 @@ enum class EventType : uint8
     IO_RECV,
     IO_SEND,
 	NPC_MOVE,
+	NPC_CHASE,
+	NPC_RETURN,
 };
 
 class EX_OVER
@@ -26,5 +28,6 @@ public:
 	//SessionRef	owner;
 	//SessionRef	session;	// Accept 성공시 세션 연결용
 	int32 _id;
+	int32 _ai_target_id;
 };
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Over.h"
+#include "GameServer.h"
 
 
 class IocpCore : public std::enable_shared_from_this<IocpCore>
@@ -10,7 +11,8 @@ public:
 	HANDLE		GetHandle() { return _iocpHandle; }
 
 	bool		Register(SOCKET socket, int32 key);
-	bool		Dispatch(uint32 timeoutMs = INFINITE);	// CP를 감시하면서 대기하는 함수, 작업스레드 원청느낌
+	void		PQCS(EX_OVER* ex_over, int32 key);
+	bool		Dispatch(uint32 timeoutMs = INFINITE);
 
 	void		StartAccept();
 

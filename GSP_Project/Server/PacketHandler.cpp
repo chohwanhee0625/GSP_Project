@@ -4,12 +4,6 @@
 #include "DBManager.h"
 
 
-std::random_device rd;
-std::mt19937 gen(rd());
-std::uniform_int_distribution<> distX(0, MAP_WIDTH - 1);
-std::uniform_int_distribution<> distY(0, MAP_HEIGHT - 1);
-
-
 PacketHandlerFunc GPacketHandler[100];
 
 bool Handle_INVALID(SessionRef& session, char* packet, int32 len)

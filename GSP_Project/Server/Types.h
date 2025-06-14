@@ -15,4 +15,5 @@ using uint64 = unsigned __int64;
 // shared_ptr
 #define USING_SHARED_PTR(name)	using name##Ref = std::shared_ptr<class name>;
 USING_SHARED_PTR(Session);
+USING_SHARED_PTR(NPC);
 USING_SHARED_PTR(IocpCore);

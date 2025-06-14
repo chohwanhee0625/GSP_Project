@@ -10,6 +10,7 @@
 #include <vector>
 #include <array>
 #include <set>
+#include <queue>
 #include <unordered_set>
 #include <unordered_map>
 #include <concurrent_unordered_map.h>
@@ -46,6 +47,11 @@ namespace std {
 		}
 	};
 }
+
+extern std::random_device rd;
+extern std::mt19937 gen;
+extern std::uniform_int_distribution<> distX;
+extern std::uniform_int_distribution<> distY;
 
 extern std::atomic_int GClientIDGen;
 

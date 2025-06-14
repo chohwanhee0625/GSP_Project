@@ -4,6 +4,8 @@
 #include "Session.h"
 #include "PacketHandler.h"
 #include "DBManager.h"
+#include "Timer.h"
+#include "NPC.h"
 
 
 thread_local std::unordered_set<int/*client id*/> view_event_list;
@@ -29,8 +31,18 @@ void GameServer::Initialize()
     }
 
     // TODO: NPC 초기화, 맵데이터 초기화
+    _timer = std::make_unique<Timer>(_iocpCore);
 
-     
+
+    std::cout << "[NPC] Initialize begin" << std::endl;
+    for (int i = MAX_USER; i < MAX_USER + NUM_MONSTER; ++i) {
+		NPCRef npc = std::make_shared<NPC>();
+        npc->SetService(shared_from_this());
+		npc->Initalize(i);
+		clients[i] = npc;
+    }
+    std::cout << "[NPC] Initialize end" << std::endl;
+
     _iocpCore->StartAccept();
 
     std::cout << "[GameServer] Network and IOCP initialization complete." << std::endl;
@@ -53,6 +65,7 @@ void GameServer::Run()
             {
                 _iocpCore->Dispatch();
 
+                // Process ViewEvents
                 for (auto& client_id : view_event_list) {
                     SessionRef session = clients[client_id];
                     if (nullptr == session) continue;
@@ -67,8 +80,7 @@ void GameServer::Run()
     }
 
     // Timer Thread
-    std::thread timerThread{};
-    timerThread.detach();
+    _timer->Start();
 
     // DB Thread
     auto& dbManager = DBManager::GetInstance();

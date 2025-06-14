@@ -2,9 +2,11 @@
 #include "Over.h"
 #include "Session.h"
 #include "IocpCore.h"
+#include "NPC.h"
 
 
 IocpCore::IocpCore(std::shared_ptr<GameServer> server)
+	: _listen_sock(INVALID_SOCKET), _client_sock(INVALID_SOCKET)
 {
     _server = server;
     _iocpHandle = ::CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0);
@@ -23,6 +25,11 @@ IocpCore::~IocpCore()
 bool IocpCore::Register(SOCKET socket, int32 key)
 {
     return ::CreateIoCompletionPort(reinterpret_cast<HANDLE>(socket), _iocpHandle, /*key*/key, 0);
+}
+
+void IocpCore::PQCS(EX_OVER* ex_over, int32 key)
+{
+    ::PostQueuedCompletionStatus(_iocpHandle, 1, key, &ex_over->_over);
 }
 
 bool IocpCore::Dispatch(uint32 timeoutMs)
@@ -75,8 +82,15 @@ bool IocpCore::Dispatch(uint32 timeoutMs)
         clients[client_id]->Dispatch(ex_over, numOfBytes);
     }
         break;
-        //case EventType::NPC_MOVE:
-        //    break;
+    case EventType::NPC_MOVE:
+    case EventType::NPC_CHASE:
+    case EventType::NPC_RETURN:
+    {
+		int32 npc_id = static_cast<int>(key);
+        auto& npc = reinterpret_cast<NPCRef&>(clients[npc_id]);
+		npc->Dispatch(ex_over, numOfBytes);
+    }
+        break;
     default:
         break;
     }

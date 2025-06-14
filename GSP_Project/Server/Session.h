@@ -18,7 +18,7 @@ public:
 	~Session();
 
 	SOCKET		GetSocket() { return _socket; }
-	void		Dispatch(EX_OVER* ex_over, DWORD numOfBytes);
+	virtual void Dispatch(EX_OVER* ex_over, DWORD numOfBytes);
 	//void		StartAccept(std::shared_ptr<GameServer> server);
 	void		dispatchViewEvents();
 
@@ -44,8 +44,7 @@ public:
 	void send_enter_player_packet(uint32 client_id);
 	void send_move_player_packet(uint32 client_id);
 	void send_leave_player_packet(uint32 client_id);
-
-	void wakeup(int waker) {}
+	virtual void wakeup(int waker) {};
 	void updateSector(int32 newX, int32 newY);
 
 public:
@@ -70,7 +69,7 @@ public:
 	std::unordered_set<std::pair<int, int>>		_sector_list;
 	std::mutex									_sl;
 
-private:
+protected:
 	SOCKET										_socket = INVALID_SOCKET;
 	EX_OVER										_recv_over;
 

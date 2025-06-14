@@ -1,4 +1,5 @@
 #pragma once
+#include "Timer.h"
 
 extern thread_local std::unordered_set<int/*client id*/> view_event_list;
 
@@ -22,8 +23,8 @@ private:
     std::atomic_bool            _running = false;
     std::vector<std::thread>    _workerThreads;    // IOCP 작업 스레드 풀
     std::shared_ptr<IocpCore>   _iocpCore;
-    SessionRef                 _listener;
 
+    std::unique_ptr<Timer>      _timer;
 public:
 
 };

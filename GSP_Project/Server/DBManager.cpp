@@ -72,7 +72,9 @@ bool DBManager::DBConnection()
 
 bool DBManager::DBFindById(const char* id, char* name, short* x, short* y)
 {
-	return false;
+
+
+	return true;
 }
 
 bool DBManager::DBUpdatePosition(const char* id, short x, short y)
