@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "PacketHandler.h"
 #include "Session.h"
+#include "DBManager.h"
+
 
 std::random_device rd;
 std::mt19937 gen(rd());
@@ -22,10 +24,10 @@ bool Handle_LOGIN(SessionRef& session, char* packet, int32 len)
 	cs_packet_login* login_packet = reinterpret_cast<cs_packet_login*>(packet);
 
 	if (false == login_packet->isdummy) {
-		//DBEvent dbEvent;
-		//dbEvent.eventType = DB::LOGIN_ASK;
-		//dbEvent.id = id;
-		//DBQueue.push(DBEvent);
+		DBEvent dbEvent;
+		dbEvent.eventType = DBEventType::DB_EVENT_LOGIN;
+		dbEvent.id = session->_id;
+		DBQueue.push(dbEvent);
 
 		return true;
 	}
@@ -123,8 +125,10 @@ bool Handle_ATTACK(SessionRef& session, char* packet, int32 len)
 
 bool Handle_CHAT(SessionRef& session, char* packet, int32 len)
 {
-	cs_packet_chat* move_packet = reinterpret_cast<cs_packet_chat*>(packet);
+	cs_packet_chat* chat_packet = reinterpret_cast<cs_packet_chat*>(packet);
+	if (chat_packet->message[0] == '\0') return true;
 
+	sc_packet_chat chat_msg;
 
 	return false;
 }

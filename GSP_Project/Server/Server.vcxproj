@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DBManager.cpp" />
     <ClCompile Include="Over.cpp" />
     <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="IocpCore.cpp" />
@@ -28,6 +29,7 @@
     <ClCompile Include="Session.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DBManager.h" />
     <ClInclude Include="Over.h" />
     <ClInclude Include="GameServer.h" />
     <ClInclude Include="game_header.h" />

@@ -48,3 +48,5 @@ namespace std {
 }
 
 extern std::atomic_int GClientIDGen;
+
+static bool ConvertCharToWide(const char* src, wchar_t* dst, int dstMaxCount);

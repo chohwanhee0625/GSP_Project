@@ -25,6 +25,9 @@
     <ClInclude Include="PacketHandler.h">
       <Filter>ServerMain</Filter>
     </ClInclude>
+    <ClInclude Include="DBManager.h">
+      <Filter>DB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ServerMain">
@@ -64,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="PacketHandler.cpp">
       <Filter>ServerMain</Filter>
+    </ClCompile>
+    <ClCompile Include="DBManager.cpp">
+      <Filter>DB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

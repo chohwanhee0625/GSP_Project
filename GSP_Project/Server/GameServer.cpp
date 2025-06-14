@@ -3,6 +3,8 @@
 #include "IocpCore.h"
 #include "Session.h"
 #include "PacketHandler.h"
+#include "DBManager.h"
+
 
 thread_local std::unordered_set<int/*client id*/> view_event_list;
 
@@ -21,8 +23,13 @@ void GameServer::Initialize()
 
     PacketHandler::Init();
 
+	auto& dbManager = DBManager::GetInstance();
+    if (false == dbManager.DBConnection()) {
+        std::cerr << "[DB] Faile to connect to DB" << std::endl;
+    }
 
-    // TODO: DB 초기화, NPC 초기화, 맵데이터 초기화
+    // TODO: NPC 초기화, 맵데이터 초기화
+
      
     _iocpCore->StartAccept();
 
@@ -60,9 +67,11 @@ void GameServer::Run()
     }
 
     // Timer Thread
-
+    std::thread timerThread{};
+    timerThread.detach();
 
     // DB Thread
+    auto& dbManager = DBManager::GetInstance();
     while (true == _running.load()) {
 
     }
