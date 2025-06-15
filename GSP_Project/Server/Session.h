@@ -45,6 +45,7 @@ public:
 	void send_move_player_packet(uint32 client_id);
 	void send_leave_player_packet(uint32 client_id);
 	virtual void wakeup(int waker) {};
+	virtual void sleepdown() {};
 	void updateSector(int32 newX, int32 newY);
 
 public:

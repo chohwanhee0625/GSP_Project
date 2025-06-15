@@ -34,6 +34,7 @@ void NPC::Initalize(int32 npc_id)
 	_id = npc_id;
 	updateSector(x, y);
 	_is_active = false;
+	sprintf_s(_name, "NPC%d", npc_id);
 
 	// TODO: LUA 스크립트 로딩 및 초기화
 }
@@ -55,13 +56,16 @@ void NPC::wakeup(int waker)
 	}
 }
 
+void NPC::sleepdown()
+{
+	ReturnToInitPos();
+}
+
 void NPC::Chase()
 {
 	if (true == _is_active) {
-		timer_lock.lock();
-		TimerQueue.emplace(TimerEvent{ _id, std::chrono::high_resolution_clock::now() + std::chrono::seconds(1),
-	T_EVENT_TYPE::EV_MOVE, _target_id });
-		timer_lock.unlock();
+		//std::cout << "Find Agro - " << _id << std::endl;
+		RegistNPCMove();
 	}
 }
 
@@ -70,8 +74,8 @@ void NPC::MoveTo(short t_x, short t_y)
 	if (false == _is_active) return;
 	short in_dx = abs(_init_x - x);
 	short in_dy = abs(_init_y - y);
-	if (in_dx + in_dy > _max_range) {
-		ReturnToInitPos();
+	if (false == _returning && in_dx + in_dy > _max_range) {
+		sleepdown();
 		return;
 	}
 	
@@ -153,8 +157,10 @@ void NPC::MoveTo(short t_x, short t_y)
 
 	// 어그로 풀려서 초기 위치에 도착 확인
 	if (_target_id < 0 && x == _init_x && y == _init_y) {
+		//std::cout << "원래자리 도착" << std::endl;
 		bool temp = true;
 		if (true == std::atomic_compare_exchange_strong(&_is_active, &temp, false)) {
+			_returning = false;
 			// 뭐 아무것도 안해도 될듯?
 			//EX_OVER* ex_over = new EX_OVER();
 			//ex_over->eventType = EventType::NPC_RETURN;
@@ -162,10 +168,7 @@ void NPC::MoveTo(short t_x, short t_y)
 		}
 	}
 	else {
-		timer_lock.lock();
-		TimerQueue.emplace(TimerEvent{ _id, std::chrono::high_resolution_clock::now() + std::chrono::seconds(1),
-			T_EVENT_TYPE::EV_MOVE, _target_id });
-		timer_lock.unlock();
+		RegistNPCMove();
 	}
 }
 
@@ -173,11 +176,18 @@ void NPC::ReturnToInitPos()
 {
 	if (true == _is_active) {
 		_target_id = -1;
-		timer_lock.lock();
-		TimerQueue.emplace(TimerEvent{ _id, std::chrono::high_resolution_clock::now() + std::chrono::seconds(1),
-	T_EVENT_TYPE::EV_MOVE, _target_id });
-		timer_lock.unlock();
+		_returning = true;
+		RegistNPCMove();
+		//std::cout << "ReturnToInitPos - " << _id << std::endl;
 	}
 }
 
+void NPC::RegistNPCMove()
+{
+	using namespace std::chrono;
 
+	timer_lock.lock();
+	TimerQueue.emplace(TimerEvent{ _id, high_resolution_clock::now() + seconds(1),
+		T_EVENT_TYPE::EV_MOVE, _target_id });
+	timer_lock.unlock();
+}

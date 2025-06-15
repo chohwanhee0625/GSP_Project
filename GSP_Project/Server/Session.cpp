@@ -209,7 +209,7 @@ void Session::Disconnect()
     std::unordered_set <int> vl = _view_list;
     for (auto& p_id : vl) {
         if (true == is_npc(p_id)) {
-            //clients[p_id]->sleepdown();
+            clients[p_id]->sleepdown();
             continue;
         }
         auto& pl = clients[p_id];
