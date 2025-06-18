@@ -6,6 +6,7 @@
 #include "DBManager.h"
 #include "Timer.h"
 #include "NPC.h"
+#include "Map.h"
 
 
 thread_local std::unordered_set<int/*client id*/> view_event_list;
@@ -30,9 +31,36 @@ void GameServer::Initialize()
         std::cerr << "[DB] Faile to connect to DB" << std::endl;
     }
 
-    // TODO: NPC 초기화, 맵데이터 초기화
+    // TEMP: DB 정상작동 확인
+    {
+        char name[MAX_ID_LENGTH];
+        short x = 0, y = 0;
+        short hp; short level; int exp;
+        char flag;
+        if (true == dbManager.DBFindById("2020182040", name, &x, &y, &hp, &level, &exp, &flag)) {
+            std::string result{ name };
+            result.erase(remove(result.begin(), result.end(), ' '), result.end());
+            std::cout << result << ", " << x << ", " << y << std::endl;
+        }
+        else {
+            if (flag == LOGIN_USING)
+                std::cout << "Someone Using" << std::endl;
+            else if (flag == LOGIN_NOEX)
+                std::cout << "NO Data in DB" << std::endl;
+            else {
+                std::cout << "Error" << std::endl;
+            }
+        }
+
+        if (true == dbManager.DBLogOutById("2020182040")) {
+            std::cout << "LogOut Success" << std::endl;
+        }
+    }
+
     _timer = std::make_unique<Timer>(_iocpCore);
 
+    auto& instance = Map::GetInstance();
+    instance.InitializeMap();
 
     std::cout << "[NPC] Initialize begin" << std::endl;
     for (int i = MAX_USER; i < MAX_USER + NUM_MONSTER; ++i) {
@@ -75,6 +103,7 @@ void GameServer::Run()
                     }
                     session->dispatchViewEvents();
                 }
+                view_event_list.clear();
             }
             });
     }
@@ -85,7 +114,7 @@ void GameServer::Run()
     // DB Thread
     auto& dbManager = DBManager::GetInstance();
     while (true == _running.load()) {
-
+        dbManager.ProcessDB();
     }
 
 }

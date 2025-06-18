@@ -43,11 +43,15 @@ void NPC::wakeup(int waker)
 {
 	short dx = abs(clients[waker]->x - x);
 	short dy = abs(clients[waker]->y - y);
-	if (dx + dy > _max_range) return;
+	if (dx > _max_range || dy > _max_range) {
+		if (waker == _target_id && true == _is_active && false == _returning)
+			sleepdown();
+		return; 
+	}
 
+	// 첫 어그로 플레이어만 쫓아가도록
 	bool temp = false;
 	if (true == std::atomic_compare_exchange_strong(&_is_active, &temp, true)) {
-		// 첫 어그로 플레이어만 쫓아가도록
 		_target_id = waker;
 		EX_OVER* ex_over = new EX_OVER();
 		ex_over->eventType = EventType::NPC_CHASE;
@@ -72,12 +76,12 @@ void NPC::Chase()
 void NPC::MoveTo(short t_x, short t_y)
 {
 	if (false == _is_active) return;
-	short in_dx = abs(_init_x - x);
-	short in_dy = abs(_init_y - y);
-	if (false == _returning && in_dx + in_dy > _max_range) {
-		sleepdown();
-		return;
-	}
+	//short in_dx = abs(_init_x - x);
+	//short in_dy = abs(_init_y - y);
+	//if (false == _returning && (in_dx > _max_range || in_dy > _max_range)) {
+	//	sleepdown();
+	//	return;
+	//}
 	
 	std::unordered_set<int> old_vl;
 	_sl.lock();
@@ -103,6 +107,10 @@ void NPC::MoveTo(short t_x, short t_y)
 	int dx = abs(t_x - x);
 	int dy = abs(t_y - y);
 
+	if (dx == 0 && dy == 0) {
+		// Attack
+	}
+
 	if (dx >= dy) {
 		if (t_x > x) x++;
 		else if (t_x < x) x--;
@@ -113,6 +121,7 @@ void NPC::MoveTo(short t_x, short t_y)
 	}
 
 	updateSector(x, y);
+
 	sector_list.clear();
 	_sl.lock();
 	sector_list = _sector_list; 
@@ -131,6 +140,10 @@ void NPC::MoveTo(short t_x, short t_y)
 			if (true == is_npc(obj->_id)) continue;
 			if (true == can_see(_id, obj->_id))
 				new_vl.insert(obj->_id);
+			//else { 
+			//	obj->_view_q.push(ViewEvent{ ViewEventType::Remove, _id });
+			//	view_event_list.insert(id); 
+			//}
 			//else npc->sleepdown();
 		}
 	}
@@ -139,13 +152,12 @@ void NPC::MoveTo(short t_x, short t_y)
 		if (0 == old_vl.count(pl)) {
 			// 플레이어의 시야에 등장
 			clients[pl]->_view_q.push(ViewEvent{ ViewEventType::Add, _id });
-			view_event_list.insert(pl);
 		}
 		else {
 			// 플레이어가 계속 보고 있음.
 			clients[pl]->_view_q.push(ViewEvent{ ViewEventType::Move, _id });
-			view_event_list.insert(pl);
 		}
+		view_event_list.insert(pl);
 	}
 
 	for (auto pl : old_vl) {
@@ -155,17 +167,18 @@ void NPC::MoveTo(short t_x, short t_y)
 		}
 	}
 
+	short in_dx = abs(_init_x - x);
+	short in_dy = abs(_init_y - y);
+	if (false == _returning && (in_dx > _max_range || in_dy > _max_range)) {
+		sleepdown();
+		return;
+	}
+
 	// 어그로 풀려서 초기 위치에 도착 확인
-	if (_target_id < 0 && x == _init_x && y == _init_y) {
+	if (true == _returning && x == _init_x && y == _init_y) {
 		//std::cout << "원래자리 도착" << std::endl;
-		bool temp = true;
-		if (true == std::atomic_compare_exchange_strong(&_is_active, &temp, false)) {
-			_returning = false;
-			// 뭐 아무것도 안해도 될듯?
-			//EX_OVER* ex_over = new EX_OVER();
-			//ex_over->eventType = EventType::NPC_RETURN;
-			//_server.lock()->GetIocpCore()->PQCS(ex_over, _id);
-		}
+		_is_active = false;
+		_returning = false;
 	}
 	else {
 		RegistNPCMove();
@@ -174,7 +187,7 @@ void NPC::MoveTo(short t_x, short t_y)
 
 void NPC::ReturnToInitPos()
 {
-	if (true == _is_active) {
+	if (false == _returning) {
 		_target_id = -1;
 		_returning = true;
 		RegistNPCMove();

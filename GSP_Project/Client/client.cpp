@@ -339,7 +339,7 @@ int main()
 	p.size = sizeof(p);
 	p.type = C2S_P_LOGIN;
 	cout << "ID: "; cin >> p.id;
-	p.isdummy = true;
+	p.isdummy = false;
 	send_packet(&p);
 	
 	while (false == login_ok) {

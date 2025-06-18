@@ -5,7 +5,8 @@
 enum DBEventType {
 	DB_EVENT_LOGIN,
 	DB_EVENT_LOGOUT,
-	DB_EVENT_STAT_CHANGE
+	DB_EVENT_STAT_CHANGE,
+	DB_EVENT_SIGN,
 };
 struct DBEvent {
 	DBEventType eventType;
@@ -23,8 +24,10 @@ public:
 	}
 
 	bool DBConnection();
-	bool DBFindById(const char* id, char* name, short* x, short* y);
-	bool DBUpdatePosition(const char* id, short x, short y);
+	bool DBFindById(const char* id, char* name, short* x, short* y, short* hp, short* level, int* exp, char* flag);
+	bool DBLogOutById(const char* id);
+	bool DBSignById(const char* id);
+	bool DBUpdateStatus(const char* id, short x, short y, short hp, short level, int exp);
 	bool DBDisconnect();
 
 	void ProcessDB();

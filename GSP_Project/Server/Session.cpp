@@ -4,6 +4,7 @@
 #include "GameServer.h"
 #include "Over.h"
 #include "PacketHandler.h"
+#include "NPC.h"
 
 concurrency::concurrent_unordered_map<int, SessionRef>  clients;
 concurrency::concurrent_unordered_set<int>              sectors[SECTOR_COUNT_X][SECTOR_COUNT_Y];
@@ -44,6 +45,8 @@ void Session::dispatchViewEvents()
             if (0 != _view_list.count(ev.id))
                 _view_list.erase(ev.id);
             send_leave_player_packet(ev.id);
+            break;
+        default:
             break;
         }
     }
@@ -182,7 +185,8 @@ void Session::OnLogin(sc_packet_avatar_info login_info, const char name[MAX_ID_L
                 continue;
             if (is_pc(pl->_id)) pl->_view_q.push(ViewEvent{ ViewEventType::Add, _id });
             else pl->wakeup(_id);
-            send_enter_player_packet(pl->_id);
+            this->send_enter_player_packet(pl->_id);
+            _view_list.insert(pl->_id);
         }
     }
 
@@ -206,10 +210,13 @@ void Session::DoRecv()
 
 void Session::Disconnect()
 {
+    //std::cout << "Disconnect" << std::endl;
     std::unordered_set <int> vl = _view_list;
     for (auto& p_id : vl) {
+        if (p_id == _id) continue;
         if (true == is_npc(p_id)) {
-            clients[p_id]->sleepdown();
+            auto npc = std::dynamic_pointer_cast<NPC>(clients[p_id]);
+            npc->sleepdown();
             continue;
         }
         auto& pl = clients[p_id];
@@ -217,7 +224,6 @@ void Session::Disconnect()
             std::lock_guard<std::mutex> ll(pl->_s_lock);
             if (ST_INGAME != pl->_state) continue;
         }
-        if (pl->_id == _id) continue;
         pl->_view_q.push(ViewEvent{ ViewEventType::Remove, _id });
     }
     closesocket(_socket);
@@ -292,22 +298,6 @@ void Session::updateSector(int32 newX, int32 newY)
     int sx = newX / SECTOR_SIZE;
     int sy = newY / SECTOR_SIZE;
 
-    // 자신의 섹터가 변경되었다면 sectors 업데이트
-    if (sx != sectorX || sy != sectorY)
-    {
-        s_locks[sectorX][sectorY].lock();
-        if (sectorX >= 0 && sectorY >= 0) {
-            if (sectors[sectorX][sectorY].count(_id) != 0) {
-                sectors[sectorX][sectorY].unsafe_erase(_id);
-            }
-        }
-        sectors[sx][sy].insert(_id);
-
-        s_locks[sectorX][sectorY].unlock();
-        sectorX = sx;
-        sectorY = sy;
-    }
-
     _sl.lock();
     _sector_list.clear();
     _sector_list.insert({ sx, sy });
@@ -325,6 +315,22 @@ void Session::updateSector(int32 newX, int32 newY)
         }
     }
     _sl.unlock();
+
+    // 자신의 섹터가 변경되었다면 sectors 업데이트
+    if (sx != sectorX || sy != sectorY)
+    {
+        s_locks[sectorX][sectorY].lock();
+        if (sectorX >= 0 && sectorY >= 0) {
+            if (sectors[sectorX][sectorY].count(_id) != 0) {
+                sectors[sectorX][sectorY].unsafe_erase(_id);
+            }
+        }
+        sectors[sx][sy].insert(_id);
+
+        s_locks[sectorX][sectorY].unlock();
+        sectorX = sx;
+        sectorY = sy;
+    }
 }
 
 bool is_pc(int object_id)

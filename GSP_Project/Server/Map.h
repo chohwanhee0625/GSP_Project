@@ -9,11 +9,25 @@ public:
 		return instance;
 	}
 
-	static bool IsObstacle(short x, short y)
+	void InitializeMap()
+	{
+
+	}
+
+	bool IsObstacle(short x, short y)
 	{
 		if (x < 0 || x >= MAP_WIDTH || y < 0 || y >= MAP_HEIGHT) return false;
 		return GetInstance().obstacles[x][y];
 	}
+
+	std::pair<short, short> GetValidRandPos() 
+	{
+		while (true) {
+			short x = distX(gen), y = distY(gen);
+			if (false == IsObstacle(x, y)) return std::pair<short, short>{ x, y };
+		}
+	}
+	
 
 private:
 	Map()

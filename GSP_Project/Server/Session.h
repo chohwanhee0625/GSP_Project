@@ -55,12 +55,17 @@ public:
 
 	int					_id;
 	short				x, y;
+	short				hp;
+	short				level;
+	int					exp;
 	char				o_type = 0;
 	char				_name[MAX_ID_LENGTH] = {};
 	char				_db_id[MAX_ID_LENGTH] = {};
 
 	int					_prev_remain = 0;
 	long long			last_move_time = 0;
+
+	std::atomic_bool	_is_attack;
 
 	std::unordered_set <int>					_view_list;
 	concurrency::concurrent_queue<ViewEvent>	_view_q;

@@ -42,6 +42,7 @@ bool IocpCore::Dispatch(uint32 timeoutMs)
         OUT reinterpret_cast<LPOVERLAPPED*>(&ex_over), timeoutMs);
     if (FALSE == ret)
     {
+        if (nullptr == ex_over) return true;
         if (ex_over->eventType == EventType::IO_ACCEPT) std::cout << "Accept Error";
         else {
             std::cout << "GQCS Error on client[" << key << "]\n";
@@ -52,7 +53,8 @@ bool IocpCore::Dispatch(uint32 timeoutMs)
     }
 
     if ((0 == numOfBytes) && ((ex_over->eventType == EventType::IO_RECV) || (ex_over->eventType == EventType::IO_SEND))) {
-        //Disconnect(static_cast<int>(key));
+        int32 id = static_cast<int>(key);
+        clients[id]->Disconnect();
         if (ex_over->eventType == EventType::IO_SEND) delete ex_over;
         return true;
     }
@@ -75,23 +77,9 @@ bool IocpCore::Dispatch(uint32 timeoutMs)
             sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16, 0, &_over._over);
     }
         break;
-    case EventType::IO_RECV:
-    case EventType::IO_SEND:
-    {
-        int32 client_id = static_cast<int>(key);
-        clients[client_id]->Dispatch(ex_over, numOfBytes);
-    }
-        break;
-    case EventType::NPC_MOVE:
-    case EventType::NPC_CHASE:
-    case EventType::NPC_RETURN:
-    {
-		int32 npc_id = static_cast<int>(key);
-        auto& npc = reinterpret_cast<NPCRef&>(clients[npc_id]);
-		npc->Dispatch(ex_over, numOfBytes);
-    }
-        break;
     default:
+        int32 id = static_cast<int>(key);
+        clients[id]->Dispatch(ex_over, numOfBytes);
         break;
     }
 

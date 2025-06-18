@@ -33,6 +33,12 @@ constexpr char MOVE_DOWN = 2;
 constexpr char MOVE_LEFT = 3;
 constexpr char MOVE_RIGHT = 4;
 
+constexpr char LOGIN_ERR = 0;
+constexpr char LOGIN_USING = 1;
+constexpr char LOGIN_NOEX = 2;
+constexpr char LOGIN_BUSY = 3;
+
+
 constexpr unsigned short MAP_HEIGHT = 2000;
 constexpr unsigned short MAP_WIDTH = 2000;
 

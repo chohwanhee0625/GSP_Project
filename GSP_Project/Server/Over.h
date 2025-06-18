@@ -11,6 +11,7 @@ enum class EventType : uint8
 	NPC_MOVE,
 	NPC_CHASE,
 	NPC_RETURN,
+	DB_LOGIN,
 };
 
 class EX_OVER

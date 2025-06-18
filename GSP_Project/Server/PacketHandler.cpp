@@ -2,6 +2,8 @@
 #include "PacketHandler.h"
 #include "Session.h"
 #include "DBManager.h"
+#include "NPC.h"
+#include "Map.h"
 
 
 PacketHandlerFunc GPacketHandler[100];
@@ -21,6 +23,7 @@ bool Handle_LOGIN(SessionRef& session, char* packet, int32 len)
 		DBEvent dbEvent;
 		dbEvent.eventType = DBEventType::DB_EVENT_LOGIN;
 		dbEvent.id = session->_id;
+		strcpy_s(session->_db_id, login_packet->id);
 		DBQueue.push(dbEvent);
 
 		return true;
@@ -50,9 +53,10 @@ bool Handle_PLAYER_MOVE(SessionRef& session, char* packet, int32 len)
 	case MOVE_LEFT:		if (x > 0) x--; break;
 	case MOVE_RIGHT:	if (x < MAP_WIDTH - 1) x++; break;
 	}
-	session->x = x; session->y = y;
-	session->updateSector(x, y);
 
+	auto& instance = Map::GetInstance();
+	if (false == instance.IsObstacle(x, y)) session->x = x; session->y = y;
+	session->updateSector(session->x, session->y);
 	std::unordered_set<int> near_list;
 	std::unordered_set<int> old_vlist = session->_view_list;
 	session->_sl.lock();
@@ -68,8 +72,9 @@ bool Handle_PLAYER_MOVE(SessionRef& session, char* packet, int32 len)
 			if (nullptr == cl) continue;
 			if (cl->_state != ST_INGAME) continue;
 			if (cl->_id == session->_id) continue;
-			if (can_see(session->_id, cl->_id))
+			if (can_see(session->_id, cl->_id)) {
 				near_list.insert(cl->_id);
+			}
 		}
 	}
 
@@ -89,7 +94,8 @@ bool Handle_PLAYER_MOVE(SessionRef& session, char* packet, int32 len)
 			}
 		}
 		else {	// NPC
-			clients[pl]->wakeup(session->_id);
+			NPCRef npc = std::dynamic_pointer_cast<NPC>(clients[pl]);
+			npc->wakeup(session->_id);
 		}
 
 		if (old_vlist.count(pl) == 0)
@@ -98,11 +104,13 @@ bool Handle_PLAYER_MOVE(SessionRef& session, char* packet, int32 len)
 
 	for (auto& pl : old_vlist) {
 		if (0 == near_list.count(pl)) {
+			//std::cout << "Leave " << pl << std::endl;
 			session->send_leave_player_packet(pl);
 			if (is_pc(pl)) {
 				clients[pl]->_view_q.push(ViewEvent{ ViewEventType::Remove, session->_id });
 				view_event_list.insert(pl);
 			}
+			else clients[pl]->sleepdown();
 		}
 	}
 
