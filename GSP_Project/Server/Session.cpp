@@ -5,6 +5,7 @@
 #include "Over.h"
 #include "PacketHandler.h"
 #include "NPC.h"
+#include "DBManager.h"
 
 concurrency::concurrent_unordered_map<int, SessionRef>  clients;
 concurrency::concurrent_unordered_set<int>              sectors[SECTOR_COUNT_X][SECTOR_COUNT_Y];
@@ -37,17 +38,17 @@ void Session::dispatchViewEvents()
         case ViewEventType::Add:
             _view_list.insert(ev.id);
             send_enter_player_packet(ev.id);
-            break;
+            continue;
         case ViewEventType::Move:
             send_move_player_packet(ev.id);
-            break;
+            continue;
         case ViewEventType::Remove:
             if (0 != _view_list.count(ev.id))
                 _view_list.erase(ev.id);
             send_leave_player_packet(ev.id);
-            break;
+            continue;
         default:
-            break;
+            continue;
         }
     }
 }
@@ -228,6 +229,11 @@ void Session::Disconnect()
     }
     closesocket(_socket);
 
+    DBEvent event;
+    event.eventType = DBEventType::DB_EVENT_LOGOUT;
+    event.id = _id;
+    DBQueue.push(event);
+
     std::lock_guard<std::mutex> ll(_s_lock);
     _state = ST_FREE;
 }
@@ -307,7 +313,7 @@ void Session::updateSector(int32 newX, int32 newY)
         int yy = sy + dy;
         if (yy < 0 || yy >= SECTOR_COUNT_Y) continue;  // 경계 검사
 
-        for (int dx = -VIEW_RANGE; dx <= VIEW_RANGE; ++dx) {	// TODO: 여기서 자꾸 allocator_traits Invoke 남. 아마 _sector_list.insert 문제인듯? 왜지?
+        for (int dx = -VIEW_RANGE; dx <= VIEW_RANGE; ++dx) {
             int xx = sx + dx;
             if (xx < 0 || xx >= SECTOR_COUNT_X) continue;  // 경계 검사
 

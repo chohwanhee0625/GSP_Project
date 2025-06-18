@@ -191,7 +191,7 @@ bool DBManager::DBLogOutById(const char* id)
 	return true;
 }
 
-bool DBManager::DBSignById(const char* id)
+bool DBManager::DBSignById(const char* id, const char* name)
 {
 	if (hdbc == SQL_NULL_HDBC) {
 		return false;
@@ -205,7 +205,7 @@ bool DBManager::DBSignById(const char* id)
 		return false;
 	}
 
-	static const wchar_t* sql = L"{CALL dbo.add_new_user(?)}";
+	static const wchar_t* sql = L"{CALL dbo.add_new_user(?, ?)}";
 	retcode = SQLPrepare(hstmt, (SQLWCHAR*)sql, SQL_NTS);
 	if (!SQL_SUCCEEDED(retcode)) {
 		HandleDiagnosticRecord(hstmt, SQL_HANDLE_STMT, retcode);
@@ -218,6 +218,16 @@ bool DBManager::DBSignById(const char* id)
 	SQLLEN cbId = SQL_NTS;
 	retcode = SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
 		20, 0, (SQLPOINTER)wid, sizeof(wid), &cbId);
+	if (!(retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO)) {
+		HandleDiagnosticRecord(hstmt, SQL_HANDLE_STMT, retcode);
+		return false;
+	}
+
+	wchar_t wname[21] = { 0 };
+	ConvertCharToWide(name, wname, 21);
+	SQLLEN cbName = SQL_NTS;
+	retcode = SQLBindParameter(hstmt, 2, SQL_PARAM_INPUT, SQL_C_WCHAR, SQL_WCHAR,
+		20, 0, (SQLPOINTER)wname, sizeof(wname), &cbName);
 	if (!(retcode == SQL_SUCCESS || retcode == SQL_SUCCESS_WITH_INFO)) {
 		HandleDiagnosticRecord(hstmt, SQL_HANDLE_STMT, retcode);
 		return false;
@@ -335,7 +345,7 @@ bool DBManager::DBDisconnect()
 	return false;
 }
 
-void DBManager::ProcessDB()
+void DBManager::ProcessDB()	// 메인스레드 1개에서 동작
 {
 	DBEvent dbEvent;
 	while (DBQueue.try_pop(dbEvent)) {
@@ -359,6 +369,7 @@ void DBManager::ProcessDB()
 				login_info.exp = exp;
 				login_info.max_hp = 100;
 				login_info.hp = hp;
+				session->OnLogin(login_info, login_info.name);
 			}
 			else {
 				sc_packet_login_fail login_fail;
@@ -388,7 +399,15 @@ void DBManager::ProcessDB()
 		case DBEventType::DB_EVENT_SIGN:
 		{
 			auto client = clients[dbEvent.id];
-			DBSignById(client->_db_id);
+			if (true == DBSignById(client->_db_id, client->_name)) {
+				DBEvent event;
+				event.eventType = DBEventType::DB_EVENT_LOGIN;
+				event.id = client->_id;
+				DBQueue.push(event);
+			}
+			else {
+				std::cout << "Sign Error" << std::endl;
+			}
 		}
 			break;
 		default:

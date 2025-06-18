@@ -153,16 +153,38 @@ void ProcessPacket(char* ptr)
 		g_top_y = packet->y - SCREEN_HEIGHT / 2;
 		avatar.show();
 
-		cout << "Login Success, Name: " << packet->name << endl;
+		cout << "Login Success, Welcom, " << packet->name << endl;
 	}
 	break;
 
 	case S2C_P_LOGIN_FAIL:
 	{
+		sc_packet_login_fail* login_fail = reinterpret_cast<sc_packet_login_fail*>(ptr);
+		if (LOGIN_NOEX == login_fail->reason) {
+			cout << "No Exsist User, Do you want to join a new one? [Y/N]: ";
+			char check;
+			cin >> check;
+			if (check == 'Y' || check == 'y') {
+				cs_packet_sign sign_pkt;
+				sign_pkt.size = sizeof(cs_packet_sign);
+				sign_pkt.type = C2S_P_SIGN;
+				cout << "ID: "; cin >> sign_pkt.id;
+				cout << "Name: "; cin >> sign_pkt.name;
+				send_packet(&sign_pkt);
+				break;
+			}
+		}
+		else if (LOGIN_USING == login_fail->reason) {
+			cout << "Someone Using This ID" << endl;
+		}
+		else {
+			cout << "Server Error or Buffer Error" << endl;
+		}
 		cs_packet_login p;
 		p.size = sizeof(p);
 		p.type = C2S_P_LOGIN;
-		cout << "Login Fail, ID: "; cin >> p.id;
+		p.isdummy = true;
+		cout << "ID: "; cin >> p.id;
 		send_packet(&p);
 	}
 	break;

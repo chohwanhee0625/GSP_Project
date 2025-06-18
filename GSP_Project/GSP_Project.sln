@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Stress_Test", "Stress_Test\Stress_Test.vcxproj", "{D645FC75-7EFB-4362-900D-946807ADD1E0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Escape Dungeon", "Escape Dungeon\Escape Dungeon.vcxproj", "{3B820C91-1DE3-49AF-B156-A945673C9717}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{78224EAA-8333-4392-A476-F6EF0F11E59A}"
 EndProject
 Global
@@ -35,14 +33,6 @@ Global
 		{D645FC75-7EFB-4362-900D-946807ADD1E0}.Release|x64.Build.0 = Release|x64
 		{D645FC75-7EFB-4362-900D-946807ADD1E0}.Release|x86.ActiveCfg = Release|Win32
 		{D645FC75-7EFB-4362-900D-946807ADD1E0}.Release|x86.Build.0 = Release|Win32
-		{3B820C91-1DE3-49AF-B156-A945673C9717}.Debug|x64.ActiveCfg = Debug|x64
-		{3B820C91-1DE3-49AF-B156-A945673C9717}.Debug|x64.Build.0 = Debug|x64
-		{3B820C91-1DE3-49AF-B156-A945673C9717}.Debug|x86.ActiveCfg = Debug|Win32
-		{3B820C91-1DE3-49AF-B156-A945673C9717}.Debug|x86.Build.0 = Debug|Win32
-		{3B820C91-1DE3-49AF-B156-A945673C9717}.Release|x64.ActiveCfg = Release|x64
-		{3B820C91-1DE3-49AF-B156-A945673C9717}.Release|x64.Build.0 = Release|x64
-		{3B820C91-1DE3-49AF-B156-A945673C9717}.Release|x86.ActiveCfg = Release|Win32
-		{3B820C91-1DE3-49AF-B156-A945673C9717}.Release|x86.Build.0 = Release|Win32
 		{78224EAA-8333-4392-A476-F6EF0F11E59A}.Debug|x64.ActiveCfg = Debug|x64
 		{78224EAA-8333-4392-A476-F6EF0F11E59A}.Debug|x64.Build.0 = Debug|x64
 		{78224EAA-8333-4392-A476-F6EF0F11E59A}.Debug|x86.ActiveCfg = Debug|Win32

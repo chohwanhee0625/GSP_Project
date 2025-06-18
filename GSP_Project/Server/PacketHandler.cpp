@@ -132,5 +132,19 @@ bool Handle_CHAT(SessionRef& session, char* packet, int32 len)
 
 	sc_packet_chat chat_msg;
 
-	return false;
+	return true;
+}
+
+bool Handle_SIGN(SessionRef& session, char* packet, int32 len)
+{
+	cs_packet_sign* sign_packet = reinterpret_cast<cs_packet_sign*>(packet);
+	strcpy_s(session->_db_id, sign_packet->id);
+	strcpy_s(session->_name, sign_packet->name);
+
+	DBEvent dbEvent;
+	dbEvent.eventType = DBEventType::DB_EVENT_SIGN;
+	dbEvent.id = session->_id;
+	DBQueue.push(dbEvent);
+
+	return true;
 }

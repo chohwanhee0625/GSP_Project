@@ -14,6 +14,7 @@ constexpr char S2C_P_ENTER = 3;
 constexpr char S2C_P_LEAVE = 4;
 
 constexpr char C2S_P_LOGIN = 5;
+constexpr char C2S_P_SIGN = 13;
 constexpr char C2S_P_MOVE = 6;
 
 constexpr char S2C_P_CHAT = 7;
@@ -114,6 +115,13 @@ struct cs_packet_login {
 	char  name[MAX_ID_LENGTH];
 	char  id[MAX_ID_LENGTH];
 	bool  isdummy = false;
+};
+
+struct cs_packet_sign {
+	unsigned char  size;
+	char  type;
+	char  name[MAX_ID_LENGTH];
+	char  id[MAX_ID_LENGTH];
 };
 
 struct cs_packet_move {

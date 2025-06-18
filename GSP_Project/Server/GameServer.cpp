@@ -37,7 +37,7 @@ void GameServer::Initialize()
         short x = 0, y = 0;
         short hp; short level; int exp;
         char flag;
-        if (true == dbManager.DBFindById("2020182040", name, &x, &y, &hp, &level, &exp, &flag)) {
+        if (true == dbManager.DBFindById("111111", name, &x, &y, &hp, &level, &exp, &flag)) {
             std::string result{ name };
             result.erase(remove(result.begin(), result.end(), ' '), result.end());
             std::cout << result << ", " << x << ", " << y << std::endl;
@@ -52,7 +52,7 @@ void GameServer::Initialize()
             }
         }
 
-        if (true == dbManager.DBLogOutById("2020182040")) {
+        if (true == dbManager.DBLogOutById("111111")) {
             std::cout << "LogOut Success" << std::endl;
         }
     }

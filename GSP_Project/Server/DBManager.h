@@ -26,7 +26,7 @@ public:
 	bool DBConnection();
 	bool DBFindById(const char* id, char* name, short* x, short* y, short* hp, short* level, int* exp, char* flag);
 	bool DBLogOutById(const char* id);
-	bool DBSignById(const char* id);
+	bool DBSignById(const char* id, const char* name);
 	bool DBUpdateStatus(const char* id, short x, short y, short hp, short level, int exp);
 	bool DBDisconnect();
 

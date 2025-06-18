@@ -9,7 +9,7 @@ bool Handle_LOGIN(SessionRef& session, char* packet, int32 len);
 bool Handle_PLAYER_MOVE(SessionRef& session, char* packet, int32 len);
 bool Handle_ATTACK(SessionRef& session, char* packet, int32 len);
 bool Handle_CHAT(SessionRef& session, char* packet, int32 len);
-
+bool Handle_SIGN(SessionRef& session, char* packet, int32 len);
 
 class PacketHandler
 {
@@ -21,6 +21,7 @@ public:
 		GPacketHandler[C2S_P_MOVE] = Handle_PLAYER_MOVE;
 		GPacketHandler[C2S_P_ATTACK] = Handle_ATTACK;
 		GPacketHandler[C2S_P_CHAT] = Handle_CHAT;
+		GPacketHandler[C2S_P_SIGN] = Handle_SIGN;
 
 	}
 };
